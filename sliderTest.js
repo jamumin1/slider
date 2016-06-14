@@ -120,8 +120,8 @@ Plugin.prototype = {
   klik : function (){
     var that= this;
 
-    $('#next').on('mouseup touchend',function(){
-      //if(that.options.animating) return;
+    $('#next').on('mouseup touchdown',function(){
+      if(that.options.animating) return;
 
       that.options.animating = true;
 
@@ -131,19 +131,22 @@ Plugin.prototype = {
       else {
         that.options.current ++
         that.pushingTiles();
+       
       }
       });
 
-      $('#prev').on('mouseup touchend',function(){
-      //if(that.options.animating) return;
+      $('#prev').on('mouseup touchdown',function(){
+      if(that.options.animating) return;
 
       that.options.animating = true;
       if(that.options.effect == 'sliderBoczny' ){
         that.navigateLeft()
+        
       }
       else {
         that.options.current --
         that.pushingTiles();
+        console.log("touch2")
       }
     });
 
@@ -260,7 +263,7 @@ Plugin.prototype = {
     $("img").hide();
 
     var currentContainer = ($('.active') ? $('.active') : $('.kontener:first'));
-    var next = ($('.kontener').eq(this.options.current-2)); 
+    var next = (this.$elChildrens.eq(this.options.current-2)); 
     var prev = ((currentContainer.prev().length) ? (currentContainer.prev()) : $('.kontener:last'));
     this.effects(currentContainer)
 
@@ -272,11 +275,11 @@ Plugin.prototype = {
 
     next.find('img').show();
 
-    if(this.options.current > $('.kontener').length){
-      this.options.current -= $('.kontener').length
+    if(this.options.current > this.$elChildrens.length){
+      this.options.current -= this.$elChildrens.length
     }
     else if (this.options.current < 0){
-      this.options.current += $('.kontener').length
+      this.options.current += this.$elChildrens.length
     }
   },
   
@@ -298,7 +301,7 @@ Plugin.prototype = {
     var currentX =0
 
     this.$elChildrens.on(' mousedown touchstart', function(e){
-     
+
         e.preventDefault();
         window.clearTimeout(600);
         currentX = e.originalEvent.touches ?  e.originalEvent.touches[0].pageX : e.pageX;
@@ -313,9 +316,9 @@ Plugin.prototype = {
           that.settings.endX = that.settings.x - currentX;
           that.settings.dir = that.settings.endX > 0 ? +1 : -1;
           
-          var endxSlowly = (-$('#zbiornik').width() *that.options.current) - that.settings.endX/5;
+          var endxSlowly = (-that.$elWidth *that.options.current) - that.settings.endX/5;
 
-            $('#lista').css({'left':endxSlowly});
+            that.$el.css({'left':endxSlowly});
             if(that.settings.dir == -1){
                   that.$elChildrens.eq(that.settings.index + (that.settings.dir)).css({
               'z-index' : -5,
@@ -333,14 +336,18 @@ Plugin.prototype = {
 
     $(document).on('mouseup touchend',function(e){
       $('body').off('mousemove touchmove');
-      console.log(currentX)
+
       e.stopPropagation()
       e.preventDefault()
-           
-      if(that.settings.endX < -that.$elWidth/3.8){
+      if (that.settings.endX <that.$elWidth/2.8 && that.settings.endX > -that.$elWidth/2.8){
+        animating = false;
+        that.move();
+      }
+      
+      if(that.settings.endX < -that.$elWidth/2.8){
         that.navigateLeft ();
       }
-      else if (that.settings.endX > that.$elWidth/3.8){
+      else if (that.settings.endX > that.$elWidth/2.8){
         that.navigateRight ();
       }
       that.settings.endX = 0
@@ -352,19 +359,19 @@ Plugin.prototype = {
     this.options.animating = true;
     this.$elChildrens.animate({left :(0)},553);        
     this.$el.animate({
-      left: -$('.kontener').width() * that.options.current
+      left: -that.$elWidth * that.options.current
     },555,function(){               
       that.options.endX = 0;
      
       if(that.options.current <2){
         
-        that.options.current += $('.kontener').length-4
+        that.options.current += that.$elChildrens.length-4
         that.$el.css({'transition':'0','left': -that.$elWidth * that.options.current+'px'})
       }
 
       else if (that.options.current > that.$elChildrens.length-4) {
        
-        that.options.current -=($('.kontener').length-4)
+        that.options.current -=(that.$elChildrens.length-4)
         that.$el.css({'transition':'0','left': -that.$elWidth *  that.options.current+'px'})
       }
     })
