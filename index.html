@@ -11,72 +11,196 @@
 
 </head>
 <style>
+/*
+      .kontener {
+ 
+     display: block;
+   position: relative;
+}
+
+
+#zbiornik {
+    margin: 0 auto;
+    width: 80vw;
+     height:80vh;
+    position: relative;
+    overflow: hidden;
+
+}
+
+#lista {
+
+        margin:0;
+        padding:0;
+        list-style-type:none;
+        clear:both;
+        position:absolute;
+        width:1000000px;
+        left : 0;
+}
+
+
+#prev {
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: tomato;
+    left: 0;
+    z-index: 111111111;
+    top: 0;
+}
+
+#next{
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: tomato;
+    right: 0;
+    z-index: 111111111;
+    top: 0;
+}
+  #o{
+        display: block;
+    width: 200px;
+    margin: 0 auto;
+clear:both;
+    height: 50px;
+
+       }
+  #s{ display: block;
+    width: 110px;
+    margin: 0 auto;
+    
+    height: 50px;
+    position: relative;
+    float: left;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0 auto;
+    padding : 0;
+    width: 500px;
+    height: 50px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  ul li {
+      border:1px solid black;
+      margin: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      float: left;
+  }
+
+ .prev,.next {
+  display:block;
+  position: relative;
+        float:left;
+        width: 10px;
+        height: 20px;
+color: red;
+z-index: 11111;
+font-size: 20px;
+              
+    }
+.selected {
+   background: black;
+}
+
+body {
+}
+*/
 
 body {
 }
 
-#prevSliderBtn {
-     left:2%;
-    }
-
-#nextSliderBtn{
-    right:2%;
-    }
-span {
-    display: block;
-    position: absolute;
-    width: 2.5em;
-    height: 2.5em;
-    z-index: 1111;
-    cursor :pointer;
-    color: black;
-    bottom:50%;
-    background:black;
-    border-radius: 50%;
-    opacity: 1;
-
+.li {
+    display :block;
+    width: 70vw;
+    height: 80vh;
+    margin: 0 auto;
+    float:right;
+   position: absolute;
+    
 }
 
 
 
 
+
+
+#prev {
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: tomato;
+    left: 0;
+    z-index: 111111111;
+    top: 0;
+}
+
+#next{
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: tomato;
+    right: 0;
+    z-index: 111111111;
+    top: 0;
+}
+
+
+
+
+      .kontener {
+
+}
 .kontener-tiles {
 
-    position: absolute;
-    display: block;
+     position: absolute;
+     display: block;
     width: 100%;
     height:100%;
    
 }
 .kontener-slider {
-  display: block;
+       display: block;
    position: relative;
-  'background-size' : 100% 100%;
-  float:left;}
+   'background-size' : 100% 100%;
+float:left;}
 
 .kontener > img {
     width: 100%;
     height: 100%;
 }
 
-.lista-tiles {
 
+
+
+#lista {
+    margin: 0 ;
+    padding:0;
+
+
+}
+.lista-tiles {
   width: 100%;
   height: 100%;
   position: relative; 
-  margin: 0 ;
-  padding:0;
 }
 
 .lista-slider {
-  list-style-type:none;
-  clear:both;
-  position:absolute;
-  width:10000px;
-  left : 0;
-  margin: 0 ;
-  padding:0;
-  cursor: move;
+    list-style-type:none;
+    clear:both;
+    position:absolute;
+    width:10000px;
+     left : 0;
 
 }
 #zbiornik{
@@ -88,6 +212,20 @@ span {
 
 }
   
+ .prev,.next {
+  display:block;
+  position: relative;
+        float:left;
+        width: 10px;
+        height: 20px;
+color: red;
+z-index: 11111;
+font-size: 20px;
+              
+    }
+.selected {
+   background: black;
+}
 
 
 
@@ -105,40 +243,115 @@ span {
 
 
 <div id='zbiornik'>
-  <ul id='lista'>
-      <li>
-        <img src='http://m.ocdn.eu/_m/d41aa34dc46aba3b926e5ad511cab000,62,37.jpg' />
-      </li>
+  <div id='lista'>
+    <div class='kontener active ' >
+            <img src='http://m.ocdn.eu/_m/d41aa34dc46aba3b926e5ad511cab000,62,37.jpg' />
+        </div>
 
-      <li>
-        <img src='http://www.ghanja.be/images/stories/knightonline.jpg' />
-      </li>
-
-      <li>
-        <img src='http://m.ocdn.eu/_m/5a1399294088dd9afb3e24ad428faf68,37,1.jpg' />
-      </li>
-
-      <li>
-        <img src='http://d.wpimg.pl/334879078--2042403709/zdjecie-smartfon.jpg' />
-      </li>
-
-      <li>
-        <img src='http://m.ocdn.eu/_m/a28b72a14ac7615347b658aa02858010,62,37.jpg' />
-      </li>
-
-      <li>
-        <img src='http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg' />
-      </li>
-
-      <li>
-        <img src='http://dimsemenov.com/plugins/royal-slider/img/full-width/4.jpg' />
-      </li>
-                 
-</ul>
+         <div class='kontener '>
+            <img src='http://www.ghanja.be/images/stories/knightonline.jpg' />
+        </div>
 
 
+           <div class='kontener ' >
+            <img src='http://m.ocdn.eu/_m/5a1399294088dd9afb3e24ad428faf68,37,1.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://d.wpimg.pl/334879078--2042403709/zdjecie-smartfon.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://m.ocdn.eu/_m/a28b72a14ac7615347b658aa02858010,62,37.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg' />
+        </div>
+
+          <div class='kontener ' >
+    <img src='http://dimsemenov.com/plugins/royal-slider/img/full-width/4.jpg' />
+        </div>
+        <div class='kontener '>
+            <img src='http://www.ghanja.be/images/stories/knightonline.jpg' />
+        </div>
 
 
+           <div class='kontener ' >
+            <img src='http://m.ocdn.eu/_m/5a1399294088dd9afb3e24ad428faf68,37,1.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://d.wpimg.pl/334879078--2042403709/zdjecie-smartfon.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://m.ocdn.eu/_m/a28b72a14ac7615347b658aa02858010,62,37.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg' />
+        </div>
+
+          <div class='kontener ' >
+    <img src='http://dimsemenov.com/plugins/royal-slider/img/full-width/4.jpg' />
+        </div>
+          <div class='kontener '>
+            <img src='http://www.ghanja.be/images/stories/knightonline.jpg' />
+        </div>
+
+
+           <div class='kontener ' >
+            <img src='http://m.ocdn.eu/_m/5a1399294088dd9afb3e24ad428faf68,37,1.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://d.wpimg.pl/334879078--2042403709/zdjecie-smartfon.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://m.ocdn.eu/_m/a28b72a14ac7615347b658aa02858010,62,37.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg' />
+        </div>
+
+          <div class='kontener ' >
+    <img src='http://dimsemenov.com/plugins/royal-slider/img/full-width/4.jpg' />
+        </div>
+          <div class='kontener '>
+            <img src='http://www.ghanja.be/images/stories/knightonline.jpg' />
+        </div>
+
+
+           <div class='kontener ' >
+            <img src='http://m.ocdn.eu/_m/5a1399294088dd9afb3e24ad428faf68,37,1.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://d.wpimg.pl/334879078--2042403709/zdjecie-smartfon.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://m.ocdn.eu/_m/a28b72a14ac7615347b658aa02858010,62,37.jpg' />
+        </div>
+
+          <div class='kontener' >
+            <img src='http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg' />
+        </div>
+
+          <div class='kontener ' >
+    <img src='http://dimsemenov.com/plugins/royal-slider/img/full-width/4.jpg' />
+        </div>
+            
+          
+</div>
+
+
+
+  <span id='prev'></span>
+     <span id='next'></span>
 </div>
 
 
@@ -149,13 +362,7 @@ span {
 <script src="https://olex-secure.openlogic.com/content/private/5e6a6f0815e830bba705e79e4a0470fbee8a5880//olex-secure.openlogic.com/jquery-2.1.4.min.js
 "></script> 
  <script type="text/javascript" src="sliderTest.js"></script>
- <script> 
- $(document).ready(function(){
-       $('#zbiornik').on('click', function(){
-     $('#zbiornik').load('#zbiornik');
-})
-         });
-</script>
+ <script>    $('#lista').nazwa({effect: 'upLeft'})</script>
 
 </body>
 
