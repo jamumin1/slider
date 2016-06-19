@@ -112,7 +112,7 @@ Plugin_InsSlider.prototype = {
       this.$el.css({'width':(this.$elWidth*this.$elChildrens.length)+'px',
                     'left': -this.$elWidth *2 +'px'});
 
-      if(that.options.mouseMove){
+      if(this.options.mouseMove){
          this.side_Slider();
       }
      
