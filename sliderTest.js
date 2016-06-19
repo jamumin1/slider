@@ -1,30 +1,42 @@
+
+/**
+ * InsSlider
+ * Developed by Zbigniew Jodynis
+ * 
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
+ */
 var $ = jQuery.noConflict();
  
- 
+
 (function($)
-
+ 
 {
-  console.log($('.kontener').eq(0).width())
+  
+function Plugin_InsSlider(element,options){
+};
 
-function Plugin(element,options){
-}
 
-
-Plugin.prototype = {
-  name : 'put your name here',
+Plugin_InsSlider.prototype = {
+  name : 'zbigniew jodynis',
   defaults  : {
     x : 7,
     y: 5,
-    dodatnik : 2,
     animating : false,
     current : 2,
-    delays : 300,
-    hoverPause : true,
-    effect : 'sliderBoczny',
-    auto : false,
-    color: '',
-    time : 100
-        
+    effect : 'sideEffect',
+    color: 'black',
+    tilesTime : 1500,
+    listTime : 1111,
+    navigationWidth: '2.5em',
+    navigationHeight: '2.5em',
+    navigation : true,
+    borderWidth: 4,
+    borderColor : 'grey',
+    mouseMove: true,
+    scrollChange : true
+       
   },
   settings :{
         x:0,
@@ -34,7 +46,7 @@ Plugin.prototype = {
         dir:0,
         left:0,
         offsetX : 0,
-          
+        direction:null
   },
 
   init : function (element,options){
@@ -42,17 +54,16 @@ Plugin.prototype = {
     this.options = $.extend({},this.defaults,options)
 
     this.$el = $(this.element)
-    this.$elChildrens = $('.kontener')
+    this.$elChildrens = this.$el.children('li')
     this.$elWidth = $(this.element).parent().width()
     this.$elHeight = $(this.element).parent().height()
-    this.tiW = Math.floor($('.kontener').width() / this.options.x);
-    this.tiH = Math.floor($('.kontener').height() / this.options.y);
-
+    this.$elParent = $(this.element).parent()
 
     this.initTiles()
     this.changeIndex()
     this.klik()
-  
+    this.sizE()
+   
     
   },  
 
@@ -71,161 +82,242 @@ Plugin.prototype = {
   },
 
   initTiles : function (){
-
-    if(this.options.effect == 'upLeft' || this.options.effect == 'upRight' || this.options.effect == 'downLeft' || this.options.effect == 'downRight' || this.options.effect == ''){
-      this.$el.parent().css({'height': Math.floor(this.$elHeight/ this.options.y)*this.options.y+'px',
-                         'width': Math.floor(this.$elWidth/ this.options.x)*this.options.x+'px'});
   
-      this.$el.addClass('lista-tiles'); 
-        $('.kontener').css({
-          'position': 'absolute',
-          'display': 'block',
-          'width': '100%',
-          'height':'100%'
-      })
-    }
+    this.$elChildrens.addClass('insContainer');
 
-    else if (this.options.effect == 'sliderBoczny'){
-
-      this.$el.addClass('lista-slider');
+    if(this.options.effect == 'upLeft' || this.options.effect == 'upRight' || this.options.effect == 'downLeft' || this.options.effect == 'downRight' || this.options.effect == 'random'){
+      this.$el.addClass('insLista-tiles'); 
       this.$elChildrens.css({
-         'width': Math.floor($('#zbiornik').width())+'px', 
-         'height': $('#zbiornik').height() + 'px',
+          'position': 'absolute',
+          'display': 'block'
+      });
+      
+      this.$elChildrens.eq(0).addClass('insActive')
+    }
+    else if (this.options.effect == 'sideEffect'){
+      this.$el.addClass('insLista-slider');
+      this.$elChildrens.css({
          'display': 'block',
          'position': 'relative',
          'float':'left'
         });
-      var last =  this.$elChildrens.slice(-2).clone()
-      var first  = $('.kontener:lt(2)').clone()
-         
+      var last =  this.$elChildrens.slice(-2).clone(),
+          first  = $('.insContainer:lt(2)').clone();
 
-      $('#lista').prepend(last)
-      $('#lista').append(first)
+      this.$el.prepend(last);
+      this.$el.append(first);
     
-      this.$elChildrens = $('.kontener')
-      this.$el.css({'width':($('#zbiornik').width()*$('.kontener').length)+'px',
-                    'left': -this.$elWidth *2 +'px'})
+      this.$elChildrens = $('.insContainer');
 
-      this.ser()
+      this.$el.css({'width':(this.$elWidth*this.$elChildrens.length)+'px',
+                    'left': -this.$elWidth *2 +'px'});
+
+      if(that.options.mouseMove){
+         this.side_Slider();
+      }
+     
+    };
+      
+    if (this.options.navigation){
+      this.$elParent.append('<span id="prevSliderBtn"></span>','<span id="nextSliderBtn"></span>');
+      $('#prevSliderBtn, #nextSliderBtn').css({'background-color':this.options.color,
+                      'widht': this.options.navigationWidth,
+                      'height': this.options.navigationHeight,
+                      'border': this.options.borderWidth+'px '+ this.options.borderColor+' solid',
+                      'display':'block'});
+    };
+    if(this.options.scrollChange){
+       this.scroll_Change();
+    };
+  },
+
+  sizE : function (){
+   
+    this.$elWidth =this.$elParent.width();
+    this.$elHeight =this.$elParent.height();
+
+
+    if(this.options.effect == 'sideEffect') {
+         this.$elChildrens.css({'width': Math.floor(this.$elWidth), 
+                                'height': this.$elHeight});
+
+        this.$el.css({'width':(this.$elWidth*this.$elChildrens.length)+'px',
+                      'left': -this.$elWidth *this.options.current +'px'});
     }
+    else {
+        this.$elChildrens.css({'width' : '100%',
+                              'height' : '100%'});
+        this.$el.css({'height': Math.floor(this.$elHeight/ this.options.y)*this.options.y+'px',
+                      'width': Math.floor(this.$elWidth/ this.options.x)*this.options.x+'px'});
+    };
+},
 
-    if(this.options.auto == true){
-      setInterval(function(){
-        pushingTiles();
-      },this.options.time);
-    }
+scroll_Change : function(){
 
+    var that = this;
+    this.$el.on('mousewheel DOMMouseScroll',function (e){
+      if(e.originalEvent.wheelDelta /120 > 0 || e.originalEvent.detail > 0){
+        if(that.options.animating) return;
+        that.options.animating= true;
+        
+        that.options.current ++;
+        that.settings.direction  = (-that.settings.endX*0.1 -that.$elWidth/2);
+        that.effects();
+      }
+      else{
+        if(that.options.animating) return;
+        that.options.animating= true;
+
+        that.options.current --;
+        that.settings.direction  = (-that.settings.endX*0.1 +that.$elWidth/2);
+        that.effects();
+
+      };
+    });
   },
 
   klik : function (){
     var that= this;
 
-    $('#next').on('mouseup touchdown',function(){
+    $('#nextSliderBtn').on('click touchstart',function(e){
+      e.stopPropagation();
+      e.preventDefault();
+
       if(that.options.animating) return;
 
       that.options.animating = true;
 
-      if(that.options.effect == 'sliderBoczny' ){
-        that.navigateRight()
-      }
-      else {
-        that.options.current ++
-        that.pushingTiles();
-       
-      }
+      that.options.current++;
+
+      that.settings.direction  = -that.settings.endX*0.1 -that.$elWidth/2
+      that.effects();
+      
       });
 
-      $('#prev').on('mouseup touchdown',function(){
+      $('#prevSliderBtn').on('click touchstart',function(e){
+      e.stopPropagation();
+      e.preventDefault();
+
       if(that.options.animating) return;
 
       that.options.animating = true;
-      if(that.options.effect == 'sliderBoczny' ){
-        that.navigateLeft()
-        
-      }
-      else {
-        that.options.current --
-        that.pushingTiles();
-        console.log("touch2")
-      }
+     
+      that.options.current--;
+      
+      that.settings.direction  = -that.settings.endX*0.1 +that.$elWidth/2
+      that.effects();
+     
     });
 
   },
 
-  effects : function (el){
-
+  effects : function (){
     var effAll = ['upLeft','upRight','downLeft','downRight'];
     var eff = this.options.effect; 
 
-    this.el = el
+    
+    if(eff !== 'sideEffect'){
+
+       $("img").hide();
+
+      var currentContainer = ($('.insActive') ? $('.insActive') : $('.insContainer:first'));
+      var next = (this.$elChildrens.eq(this.options.current-2)); 
+     
+      currentContainer.removeClass('insActive');
+      currentContainer.css('z-index','100');
+      next.addClass("insActive");
+      next.css('z-index','50');
+     
+
+      next.find('img').show();
+
+      if(this.options.current > this.$elChildrens.length){
+        this.options.current -= this.$elChildrens.length;
+      }
+      else if (this.options.current < 0){
+        this.options.current += this.$elChildrens.length;
+      }
+    }
+
+
+
     switch (eff){
       case 'random' : 
-        eff = effAll[Math.floor(Math.random()*(effAll.length))];
+         this.randoM(currentContainer)
         break;
 
       case 'upLeft' :
-        this.uLeff(el)
+        this.uLeff(currentContainer)
         break;
 
       case 'upRight' :
-        this.uPeff(el);
+        this.uPeff(currentContainer);
         break;
 
       case 'downLeft' :
-        this.dLeff(el);
+        this.dLeff(currentContainer);
         break;
 
       case 'downRight' :
-        this.dReff(el);
+        this.dReff(currentContainer);
         break;
 
-      case 'sliderBoczny' :
-        this.ser(el);
+      case 'sideEffect' :
+        this.move();
         break;
 
     }
   },
-
+ randoM : function (kontenerElem){
+    var result = this.options.x * this.options.y;
+    for(var i=1; i<result; i++){
+        rand = Math.floor((Math.random()*(result)+ 1))
+          kontenerElem.append('<div class="insTile" id="'+rand+'"></div>');
+    };
+ 
+    this.animateTiles(kontenerElem);
+  },
   uLeff : function (kontenerElem){
       for(var i=1; i<this.options.y+1; i++){
         for(var j=1; j<this.options.x+1; j++){
-          kontenerElem.append('<div class="tile" id="'+i*j+'"></div>');
+          kontenerElem.append('<div class="insTile" id="'+i*j+'"></div>');
         };
     };
-    this.animateTiles(kontenerElem)
+    this.animateTiles(kontenerElem);
   },
 
   uPeff : function ( kontenerElem){
     for(var i=1; i<this.options.y+1; i++){
       for(var j=this.options.x; j>0; j--){
-          kontenerElem.append('<div class="tile" id="'+i*j+'"></div>');
+          kontenerElem.append('<div class="insTile" id="'+i*j+'"></div>');
         };
     };
-    this.animateTiles(kontenerElem)
+    this.animateTiles(kontenerElem);
   },
 
   dLeff : function (kontenerElem) {
       for(var i=this.options.y; i>0; i--){
         for(var j=1; j<this.options.x+1; j++){
-          kontenerElem.append('<div class="tile" id="'+i*j+'"></div>');  
+          kontenerElem.append('<div class="insTile" id="'+i*j+'"></div>');  
        };
     };
-    this.animateTiles(kontenerElem)
+    this.animateTiles(kontenerElem);
   },
   dReff : function (kontenerElem) {
       for(var i=this.options.y; i>0; i--){
         for(var j=this.options.x; j>0; j--){
-          kontenerElem.append('<div class="tile" id="'+i*j+'"></div>');
+          kontenerElem.append('<div class="insTile" id="'+i*j+'"></div>');
         };
     };
-    this.animateTiles(kontenerElem)
+    this.animateTiles(kontenerElem);
   },
   animateTiles : function (elem){
-    this.elem = elem
-    var that = this
+
+    this.elem = elem;
+    var that = this;
     var src = elem.find('img').attr('src');
 
-    elem.find('.tile').css({
+    elem.find('.insTile').css({
       'width':  Math.floor(this.$elWidth / this.options.x)+'px', 
       'height': Math.floor(this.$elHeight / this.options.y) + 'px',
       'opacity': '1',
@@ -237,163 +329,130 @@ Plugin.prototype = {
       'background-size': 100 * this.options.x + '%' + 100 * this.options.y +'%',
       });
 
-    elem.find('.tile').each(function(){
+    elem.find('.insTile').each(function(){
         var pos = $(this).position();
         $(this).css({ 'backgroundPosition': -pos.left +'px '+ -pos.top +'px'});
-    })
+    });
 
-    elem.find('.tile').each(function(i){
-        var pos = $(this).position();
+    elem.find('.insTile').each(function(i){
+      var pos = $(this).position();
 
-        $(this).css({'opacity': '0',
-          'transition': '400ms',
-          'transform': 'scale(0.9)',
-          '-webkit-filter': 'blur(15px)',
-          'transition-delay': (parseInt($(this).attr('id')) )/35 + 's'});
-      })
+      $(this).css({
+        'opacity': '0',
+        'transition': '400ms',
+        'transform': 'scale(0.9)',
+        '-webkit-filter': 'blur(15px)',
+        'transition-delay': (parseInt($(this).attr('id')) )*(that.options.tilesTime*0.03) + 'ms'});
+      });
     setTimeout(function(){
       that.options.animating = false;
-      elem.find('.tile').remove()
-    }, 1000)
+      elem.find('.insTile').remove();
+      
+    }, (that.options.tilesTime*0.03)*(that.options.x * that.options.y));
   },
-  pushingTiles: function (){  
-
-    if (this.options.effect == 'sliderBoczny') return;
-
-    $("img").hide();
-
-    var currentContainer = ($('.active') ? $('.active') : $('.kontener:first'));
-    var next = (this.$elChildrens.eq(this.options.current-2)); 
-    var prev = ((currentContainer.prev().length) ? (currentContainer.prev()) : $('.kontener:last'));
-    this.effects(currentContainer)
-
-    currentContainer.removeClass('active');
-    currentContainer.css('z-index','100');
-    next.addClass("active");
-    next.css('z-index','50');
-    prev.css('z-index','50');
-
-    next.find('img').show();
-
-    if(this.options.current > this.$elChildrens.length){
-      this.options.current -= this.$elChildrens.length
-    }
-    else if (this.options.current < 0){
-      this.options.current += this.$elChildrens.length
-    }
-  },
+   
+  side_Slider : function(){
   
-  navigateRight : function (){
-        var that = this
-    if(this.options.current<that.$elChildrens.length-1) {
-      that.options.current ++;
-      that.move();
-    }
-  },
-  navigateLeft : function (){
-    if(this.options.current > 0) {
-      this.options.current --;
-      this.move(this.options.current);
-    }
-  },
-  ser : function(){
-    var that = this
-    var currentX =0
+    var that = this;
+    var currentX =0;
 
     this.$elChildrens.on(' mousedown touchstart', function(e){
+      if(that.options.animating) return;
+      e.preventDefault();
+    
+      currentX = e.originalEvent.touches ?  e.originalEvent.touches[0].pageX : e.pageX;
+     
+      that.settings.index = $(this).index();
+      that.settings.x = currentX;
 
-        e.preventDefault();
-        window.clearTimeout(600);
-        currentX = e.originalEvent.touches ?  e.originalEvent.touches[0].pageX : e.pageX;
-        if(that.options.animating) return;
-
-        that.settings.index = $(this).index();
-        that.settings.x = currentX
-          //
-          $('body').on('mousemove touchmove',function(e){
+        $(document).on('mousemove touchmove',function(e){
+           e.preventDefault();
+    
           currentX = e.originalEvent.touches ?  e.originalEvent.touches[0].pageX : e.pageX;
- 
+   
           that.settings.endX = that.settings.x - currentX;
           that.settings.dir = that.settings.endX > 0 ? +1 : -1;
-          
+            
           var endxSlowly = (-that.$elWidth *that.options.current) - that.settings.endX/5;
 
-            that.$el.css({'left':endxSlowly});
-            if(that.settings.dir == -1){
-                  that.$elChildrens.eq(that.settings.index + (that.settings.dir)).css({
+          that.$el.css({'left':endxSlowly});
+          if(that.settings.dir == -1){
+            that.$elChildrens.eq(that.settings.index + (that.settings.dir)).css({
               'z-index' : -5,
-              'left' : -that.settings.endX*0.1 +that.$elWidth/2})    
-              }
-                else{ 
-              that.$elChildrens.eq(that.settings.index + (that.settings.dir)).css({
-                    'z-index' : -5,
-                'left' : -that.settings.endX*0.1 -that.$elWidth/2})
-            }
+              'left' : -that.settings.endX*0.1 +that.$elWidth/2}) ; 
+              that.settings.direction  = -that.settings.endX*0.1 +that.$elWidth/2
+          }
+          else{ 
+            that.$elChildrens.eq(that.settings.index + (that.settings.dir)).css({
+              'z-index' : -5,
+              'left' : -that.settings.endX*0.1 -that.$elWidth/2});
+              that.settings.direction  = -that.settings.endX*0.1 -that.$elWidth/2
+          }
       
-          });
+        });
 
-       });
+    });
 
     $(document).on('mouseup touchend',function(e){
-      $('body').off('mousemove touchmove');
+      $(document).off('mousemove touchmove');
 
-      e.stopPropagation()
-      e.preventDefault()
-      if (that.settings.endX <that.$elWidth/2.8 && that.settings.endX > -that.$elWidth/2.8){
-        animating = false;
-        that.move();
+      e.stopPropagation();
+      e.preventDefault();
+            
+      if(that.settings.endX < -1){
+        that.options.current --;
+        that.effects();
       }
-      
-      if(that.settings.endX < -that.$elWidth/2.8){
-        that.navigateLeft ();
+      else if (that.settings.endX > 1){
+        that.options.current++;
+        that.effects();
       }
-      else if (that.settings.endX > that.$elWidth/2.8){
-        that.navigateRight ();
-      }
-      that.settings.endX = 0
+      that.settings.endX = 0;
     }); 
+
   },
 
   move : function  (liczba){
     var that = this
-    this.options.animating = true;
-    this.$elChildrens.animate({left :(0)},553);        
-    this.$el.animate({
-      left: -that.$elWidth * that.options.current
-    },555,function(){               
-      that.options.endX = 0;
-     
-      if(that.options.current <2){
-        
-        that.options.current += that.$elChildrens.length-4
-        that.$el.css({'transition':'0','left': -that.$elWidth * that.options.current+'px'})
-      }
+        this.$elChildrens.eq(this.options.current).css({'transition':'0','left': that.settings.direction  + 'px',
+                                                    'z-index' : -5})
+          this.$elChildrens.eq(this.options.current).animate({left :(0 )},that.options.listTime,function(){
+          that.$elChildrens.css({'transition':'0','left':'0px'})
+        })
 
-      else if (that.options.current > that.$elChildrens.length-4) {
-       
-        that.options.current -=(that.$elChildrens.length-4)
-        that.$el.css({'transition':'0','left': -that.$elWidth *  that.options.current+'px'})
-      }
-    })
-    setTimeout(function(){
-      that.options.animating = false;
-      that.$elChildrens.siblings().css('z-index',1);
-    },600);
-  }
-   
-}
- 
+        this.$el.animate({
+            left: -this.$elWidth * that.options.current
+        },that.options.listTime,function(){               
+            that.options.endX = 0;
+            if(that.options.current <2){
+                that.options.current +=that.$elChildrens.length-4
+                that.$el.css({'transition':'0','left': -that.$elWidth * that.options.current+'px'})
+            }
+            else if (that.options.current > that.$elChildrens.length-4) {
 
-$.fn.nazwa = function(options){
+              that.options.current-=that.$elChildrens.length-4
+
+              that.$el.css({'transition':'0','left': -that.$elWidth *  that.options.current+'px'})
+            }
+        })
+        setTimeout(function(){
+            that.options.animating = false;
+            that.$elChildrens.siblings().css('z-index',1);
+        },that.options.listTime);
+
+   }
+}   
+
+$.fn.RwdJquerySlider = function(options){
   return this.each(function(){
-    var plugin = new Plugin(this,options)
-    plugin.init(this,options)
+    var PluginInsSlider = new Plugin_InsSlider(this,options)
+    PluginInsSlider.init(this,options)
 
-  
+      $(window).resize(function() {
+      PluginInsSlider.sizE()
+});
   })
 }
-
-
 
 
 })(jQuery);
