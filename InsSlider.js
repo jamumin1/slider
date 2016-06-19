@@ -160,16 +160,16 @@ scroll_Change : function(){
         if(that.options.animating) return;
         that.options.animating= true;
         
-        that.options.current ++;
-        that.settings.direction  = (-that.settings.endX*0.1 -that.$elWidth/2);
+        that.options.current --;
+        that.settings.direction  = (-that.settings.endX*0.1 +that.$elWidth/2);
         that.effects();
       }
       else{
         if(that.options.animating) return;
         that.options.animating= true;
 
-        that.options.current --;
-        that.settings.direction  = (-that.settings.endX*0.1 +that.$elWidth/2);
+        that.options.current ++;
+        that.settings.direction  = (-that.settings.endX*0.1 -that.$elWidth/2);
         that.effects();
 
       };
